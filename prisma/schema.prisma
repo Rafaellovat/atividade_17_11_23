@@ -1,0 +1,40 @@
+model Usuario {
+  idUsuario  String   @id @default(uuid())
+
+  nome       String
+  email      String   @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  lances     Lance[]  @relation("UsuarioLance")
+}
+
+model Leilao {
+  idLeilao   String   @id @default(uuid())
+
+  produto    String
+  preco      Float
+  dataLimite DateTime
+  dono Usuario @relation(fields: [idUsuario], references: [idUsuario])
+  listaDeLance String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  lances Lance[] @relation("LeiloesLance")
+}
+
+model Lance {
+  idLance   String    @id @default(uuid())
+
+  comprador Usuario @relation(fields: [idUsuario], references: [idUsuario])
+  leilao    Leilao @relation(fields: [idLeilao], references: [idLeilao])
+  valor     Float 
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now())
+
+  usuario   Usuario @relation("UsuarioLance", fields: [idUsuario])
+  leiloes   Leilao @relation("LeiloesLance", fields: [idLeilao])
+}
